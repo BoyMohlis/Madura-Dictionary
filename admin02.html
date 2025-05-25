@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin Kamus Madura</title>
+  <style>
+    body { font-family: sans-serif; padding: 1rem; max-width: 600px; margin: auto; }
+    input, textarea, select { width: 100%; padding: 8px; margin: 6px 0; }
+    button { padding: 10px 15px; margin-top: 10px; }
+    .output { white-space: pre-wrap; background: #f3f3f3; padding: 10px; margin-top: 10px; border-radius: 6px; }
+    .char-buttons button { margin: 2px; padding: 5px 10px; }
+  </style>
+</head>
+<body>
+  <h2>Tambah Data Kamus Bahasa Madura</h2>
+  <label>Kata (Madura):</label>
+  <div class="char-buttons">
+    <button onclick="insertChar('â')">â</button>
+    <button onclick="insertChar('ê')">ê</button>
+    <button onclick="insertChar('î')">î</button>
+    <button onclick="insertChar('ô')">ô</button>
+    <button onclick="insertChar('û')">û</button>
+    <button onclick="insertChar('è')">è</button>
+    <button onclick="insertChar('é')">é</button>
+  </div>
+  <input type="text" id="kata">
+
+  <label>Arti (Indonesia):</label>
+  <input type="text" id="arti">
+
+  <label>Keterangan:</label>
+  <textarea id="keterangan" rows="3"></textarea>
+
+  <label>Nama File Suara (opsional, contoh: aba.mp3):</label>
+  <input type="text" id="suara">
+
+  <button onclick="generateJSON()">➕ Tambahkan ke JSON</button>
+  <button onclick="copyOutput()">📋 Salin Semua</button>
+
+  <h3>Hasil JSON:</h3>
+  <div class="output" id="output"></div>
+
+  <script>
+    const kataInput = document.getElementById('kata');
+    let data = [];
+
+    function insertChar(char) {
+      const start = kataInput.selectionStart;
+      const end = kataInput.selectionEnd;
+      const text = kataInput.value;
+      kataInput.value = text.slice(0, start) + char + text.slice(end);
+      kataInput.focus();
+      kataInput.setSelectionRange(start + 1, start + 1);
+    }
+
+    function generateJSON() {
+      const kata = document.getElementById('kata').value.trim();
+      const arti = document.getElementById('arti').value.trim();
+      const keterangan = document.getElementById('keterangan').value.trim();
+      const suara = document.getElementById('suara').value.trim();
+
+      if (!kata || !arti) return alert("Kata dan arti wajib diisi!");
+
+      const entry = { kata, arti, keterangan };
+      if (suara) entry.suara = suara;
+
+      data.push(entry);
+      document.getElementById('output').textContent = JSON.stringify(data, null, 2);
+
+      // Reset input
+      document.getElementById('kata').value = "";
+      document.getElementById('arti').value = "";
+      document.getElementById('keterangan').value = "";
+      document.getElementById('suara').value = "";
+    }
+
+    function copyOutput() {
+      const text = document.getElementById('output').textContent;
+      navigator.clipboard.writeText(text);
+      alert("JSON disalin ke clipboard!");
+    }
+  </script>
+</body>
+</html>

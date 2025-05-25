@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <title>Admin Kamus Madura</title>
+  <style>
+    body { font-family: sans-serif; padding: 20px; background: #f5f5f5; }
+    label { display: block; margin-top: 10px; }
+    input, textarea { width: 100%; padding: 8px; margin-top: 4px; }
+    button { margin-top: 10px; padding: 10px; background: #007bff; color: white; border: none; border-radius: 5px; }
+    pre { background: #eee; padding: 10px; margin-top: 20px; white-space: pre-wrap; }
+  </style>
+</head>
+<body>
+  <h1>Admin Kamus Madura</h1>
+  <label>Kata:</label>
+  <input type="text" id="kata" />
+  <label>Arti:</label>
+  <input type="text" id="arti" />
+  <label>Keterangan:</label>
+  <textarea id="keterangan" rows="3"></textarea>
+  <button onclick="tambahData()">Tambah Data</button>
+  <button onclick="salinJSON()">Salin Semua</button>
+
+  <pre id="output"></pre>
+
+  <script>
+    const list = [];
+    function tambahData() {
+      const kata = document.getElementById('kata').value.trim();
+      const arti = document.getElementById('arti').value.trim();
+      const keterangan = document.getElementById('keterangan').value.trim();
+      if (!kata || !arti) return alert("Kata dan arti wajib diisi!");
+      list.push({ kata, arti, keterangan });
+      document.getElementById('output').textContent = JSON.stringify(list, null, 2);
+      document.getElementById('kata').value = '';
+      document.getElementById('arti').value = '';
+      document.getElementById('keterangan').value = '';
+    }
+
+    function salinJSON() {
+      navigator.clipboard.writeText(JSON.stringify(list, null, 2));
+      alert("Data disalin ke clipboard!");
+    }
+  </script>
+</body>
+</html>
